@@ -24,10 +24,7 @@
                         "headline": "Breaking News: Event X",
                         "datePublished": "2023-01-01T08:00:00Z",
                         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-						"inLanguage" :{
-						"@type" : "Language",
-						"name" : "English",
-						},
+						"inLanguage": "English",
                         "author": {
                           "@type": "Person",
                           "name": "Journalist A"
@@ -36,6 +33,7 @@
 						  "url": "link",
 						  "description": "Image for the article"
 						},
+						"url": "https://example.com/article/1"
                       "prov": {
 						"@context": "http://www.w3.org/ns/prov#",
                         "entity": "article:1",
@@ -107,19 +105,17 @@
                         "headline": "Breaking News: Event X",
                         "datePublished": "2023-01-01T08:00:00Z",
                         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-						"inLanguage" :{
-						"@type" : "Language",
-						"name" : "English"
-						},
+						"inLanguage": "English",
                         "author": {
                           "@type": "Person",
                           "name": "Journalist A"
                         }
-					  "image": {
+						"image": {
 						  "url": "link",
 						  "description": "Image for the article"
-					  }
-                  "prov": {
+						},
+						"url": "https://example.com/article/1",
+				"prov": {
 					"@context": "http://www.w3.org/ns/prov#",
                     "entity": "article:1",
                     "activity": "publishing",
@@ -162,10 +158,7 @@
                         "genre" : "Sports",
 						"datePublished": "2023-01-01T08:00:00Z",
                         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-                        "inLanguage" :{
-						"@type" : "Language",
-						"name" : "English"
-						},
+                        "inLanguage": "English",
 						"author": {
                           "@type": "Person",
                           "name": "Journalist A"
@@ -174,6 +167,7 @@
 						  "url": "link",
 						  "description": "Image for the article"
 						},
+						"url": "https://example.com/article/1",
                       "prov": {
 						"@context": "http://www.w3.org/ns/prov#",
                         "entity": "article:1",
@@ -229,7 +223,7 @@
             "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
           },
 		  "inLanguage": {
-			"@type" : "Language",
+			"type" : "string",
 			"example" : "English"
 		  },
           "author": {
@@ -244,8 +238,12 @@
                 "example": "Journalist A"
               }
             }
-          }
-        }
+          },
+		  "url": {
+			"type": "string",
+			"format": "uri",
+			"example": "https://example.com/article/1"
+		}
       },
       "ResourceInput": {
         "type": "object",
@@ -256,11 +254,7 @@
           },
           "article": {
             "$ref": "#/components/schemas/Article"
-          },
-		  "link": {
-            "type": "string",
-            "example": "https://example.com/article/1"
-		  }
+		  },
           "prov": {
             "type": "object",
             "properties": {
