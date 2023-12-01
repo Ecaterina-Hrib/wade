@@ -1,0 +1,313 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Web News Provenance",
+    "version": "1.0.0",
+    "description": "API for managing provenance information of web news using PROV and schema.org"
+  },
+  "paths": {
+    "/articles": {
+      "get": {
+        "summary": "Get a list of news articles with provenance information",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "resource": [
+                    {
+                      "id": 1,
+                      "article": {
+						"@context": "https://schema.org",
+                        "@type": "Article",
+                        "headline": "Breaking News: Event X",
+                        "datePublished": "2023-01-01T08:00:00Z",
+                        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+						"inLanguage" :{
+						"@type" : "Language",
+						"name" : "English",
+						},
+                        "author": {
+                          "@type": "Person",
+                          "name": "Journalist A"
+                        },
+					    "image": {
+						  "url": "link",
+						  "description": "Image for the article"
+						},
+                      "prov": {
+						"@context": "http://www.w3.org/ns/prov#",
+                        "entity": "article:1",
+                        "activity": "publishing",
+                        "agent": "journalist:123",
+                        "used": [
+                          {"entity": "source:456"}
+                        ],
+                        "generated": [
+                          {"entity": "article:1"},
+                          {"entity": "media:789"}
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new resource with the online article",
+        "requestBody": {
+          "description": "Resource details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResourceInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource created successfully"
+          },
+          "400": {
+            "description": "Bad request, invalid input"
+          }
+        }
+      }
+    },
+    "/articles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the resource",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get details of a specific news article with provenance information",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "article": {
+                        "@context": "https://schema.org",
+						"@type": "Article",
+                        "headline": "Breaking News: Event X",
+                        "datePublished": "2023-01-01T08:00:00Z",
+                        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+						"inLanguage" :{
+						"@type" : "Language",
+						"name" : "English"
+						},
+                        "author": {
+                          "@type": "Person",
+                          "name": "Journalist A"
+                        }
+					  "image": {
+						  "url": "link",
+						  "description": "Image for the article"
+					  }
+                  "prov": {
+					"@context": "http://www.w3.org/ns/prov#",
+                    "entity": "article:1",
+                    "activity": "publishing",
+                    "agent": "journalist:123",
+                    "used": [
+                      {"entity": "source:456"}
+                    ],
+                    "generated": [
+                      {"entity": "article:1"},
+                      {"entity": "media:789"}
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    }
+  },
+	"/articles/topic": {
+		"get": {
+        "summary": "Get a list of news articles from a specific topic",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "resource": [
+                    {
+                      "id": 1,
+                      "article": {
+                        "@context": "https://schema.org",
+						"@type": "Article",
+                        "headline": "Breaking News: Event X",
+                        "genre" : "Sports",
+						"datePublished": "2023-01-01T08:00:00Z",
+                        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+                        "inLanguage" :{
+						"@type" : "Language",
+						"name" : "English"
+						},
+						"author": {
+                          "@type": "Person",
+                          "name": "Journalist A"
+                        },
+						"image": {
+						  "url": "link",
+						  "description": "Image for the article"
+						},
+                      "prov": {
+						"@context": "http://www.w3.org/ns/prov#",
+                        "entity": "article:1",
+                        "activity": "publishing",
+                        "agent": "journalist:123",
+                        "used": [
+                          {"entity": "source:456"}
+                        ],
+                        "generated": [
+                          {"entity": "article:1"},
+                          {"entity": "media:789"}
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+	}
+},
+"components": {
+    "schemas": {
+      "Article": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "type": "string",
+            "example": "https://schema.org"
+          },
+
+          "@type": {
+            "type": "string",
+            "example": "Article"
+          },
+          "headline": {
+            "type": "string",
+            "example": "Breaking News: Event X"
+          },
+		  "genre": {
+			  "type": "string",
+			  "example" :"Sports"
+		  },
+          "datePublished": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T08:00:00Z"
+          },
+          "description": {
+            "type": "string",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
+          },
+		  "inLanguage": {
+			"@type" : "Language",
+			"example" : "English"
+		  },
+          "author": {
+            "type": "object",
+            "properties": {
+              "@type": {
+                "type": "string",
+                "example": "Person"
+              },
+              "name": {
+                "type": "string",
+                "example": "Journalist A"
+              }
+            }
+          }
+        }
+      },
+      "ResourceInput": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "Article"
+          },
+          "article": {
+            "$ref": "#/components/schemas/Article"
+          },
+		  "link": {
+            "type": "string",
+            "example": "https://example.com/article/1"
+		  }
+          "prov": {
+            "type": "object",
+            "properties": {
+			  "@context": {
+                "type": "string",
+                "example": "http://www.w3.org/ns/prov#"
+              },
+              "entity": {
+                "type": "string",
+                "example": "article:1"
+              },
+              "activity": {
+                "type": "string",
+                "example": "publishing"
+              },
+              "agent": {
+                "type": "string",
+                "example": "journalist:123"
+              },
+              "used": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "entity": {
+                      "type": "string",
+                      "example": "source:456"
+                    }
+                  }
+                }
+              },
+              "generated": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "entity": {
+                      "type": "string",
+                      "example": "article:1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
