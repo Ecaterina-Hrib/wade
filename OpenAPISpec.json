@@ -33,7 +33,7 @@
 						  "url": "link",
 						  "description": "Image for the article"
 						},
-						"url": "https://example.com/article/1"
+						"url": "https://example.com/article/1",
                       "prov": {
 						"@context": "http://www.w3.org/ns/prov#",
                         "entity": "article:1",

@@ -26,6 +26,7 @@
 
     <div role="contentinfo" style="font-size:1vw">
         <section typeof="sa:AuthorList">
+            <h2>Team: Fine Dining</h2>
             <h2>Authors</h2>
             <ul>
                 <li> Hrib Ecaterina-Nicoleta <a class="authors"
@@ -39,19 +40,19 @@
 
         <section>
             <h1>Content</h1>
-            <div class="cuprins">
+            <div class="content">
                 <ol role="directory">
-                    <li class="no-number"><a href="#introducere"><span>1. </span>General Description</a>
+                    <li class="no-number"><a href="#description"><span>1. </span>General Description</a>
                     </li>
 
-                    <li class="no-number"><a href="#frond-end"><span>2. </span>Architecture</a>
+                    <li class="no-number"><a href="#architecture"><span>2. </span>Architecture</a>
                         <ol role="directory">
                             <li class="no-number"><a href=""><span>2.1 </span> Use Case Diagrams </a></li>
                             <li class="no-number"><a href=""><span>2.2 </span> C4 Diagrams </a></li>
                         </ol>
                     </li>
 
-                    <li class="no-number"><a href="#Back-End"> <span>3. </span>Modelling data </a>
+                    <li class="no-number"><a href="#Modelling_data"> <span>3. </span>Modelling data </a>
                         <ol role="directory">
 
                             <li class="no-number"><a href=""><span>3.1 </span> Modelling Data with OpenAPI</a></li>
@@ -59,10 +60,9 @@
                         </ol>
                     </li>
 
-                    <li class="no-number"><a href="#References">References</a>
+                    <li class="no-number"><a href="#References"><span>4. </span>References</a>
                         <ol role="directory">
-                            <li class="no-number"><a href="https://schema.org/Article"> Article from schema.org class </a></li>
-                            <li class="no-number"><a href="https://www.w3.org/TR/prov-o"> PROV-O ontology for provenance </a></li>
+
                         </ol>
                     </li>
 
@@ -70,7 +70,7 @@
             </div>
         </section>
 
-        <section id="introducere" role="doc-intro">
+        <section id="description" role="doc-intro">
             <h2> 1. Description of the project</h2>
             <p>
                 A web application able to model and manage using external source of searching web news provenance for an online
@@ -85,14 +85,14 @@
             </p>
         </section>
 
-        <section id="frond-end">
+        <section id="architecture">
             <h2> 2. Architecture </h2>
             <p>
                As programming language will be used Python and Django Framework for the development of the application.</p>
-               <p> The Django Framework uses MVT architecture pattern being the Model-View-Template, where views act like controllers.
-                This pattern is derived from MVC(Model-View-Controller), the three levels of architecture or 3 components.
-                   The Model component stores the data that is being transmitted between Controller component and the View component.
-                   Controllers are the actions made on a specific objects and it's behaviour in certain situations.
+            <p> The Django Framework uses MVT architecture pattern being the Model-View-Template, where templates act like controllers.</p>
+                <p>This pattern is derived from MVC(Model-View-Controller), the three levels of architecture or 3 components.
+                   The Model component stores the data that is being transmitted between Controller component and the View component. </p>
+                 <p>  Controllers are the actions made on a specific objects and it's behaviour in certain situations.
                    The View, is what a client sees in the web application, is the UI transmitted to the user.
             </p>
             <p> The application will have the ability to let user to model the search for a web news provenance,
@@ -110,20 +110,21 @@
             <img src="c4-3.png" alt="A c4 diagram" class="center">
             </section>
 
-        <section id="Back-End">
+        <section id="Modelling_data">
             <h2> 3. Modelling data </h2>
             <p> API documentation</p>
-            <h3> Modelling data with OpenAPI </h3>
-            <p>A linked json file in OpenAPI made using schema.org
-                Article class derived from CreativeWork and PROV-O ontology </p>
-            <p>Click <a href="OpenAPISpec.json"> HERE </a>to view JSON file in another tab</p>
+            <h3> RESTAPI in OpenAPI </h3>
+            <p>A linked json file in OpenAPI made using:</p>
+            <p> - schema.org Article class derived from CreativeWork class for article; </p>
+            <p> - PROV-O ontology for provenance; </p>
+            <p>Click <a href="OpenAPISpec.json">HERE</a>to view JSON file in another tab.</p>
 
         </section>
 
         <section id="References">
             <h2> 5. References </h2>
              <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/projects/index.html"> Project requirement </a>
-            <p> Informations tooked from: </p>
+            <p> Information tooked from: </p>
             <ul>
                 <li> <a href="https://schema.org/CreativeWork"> CreativeWork from schema.org </a> </li>
                 <li> <a href="https://schema.org/Article"> Article  from schema.org </a> </li>
