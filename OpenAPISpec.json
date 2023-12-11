@@ -19,33 +19,40 @@
                     {
                       "id": 1,
                       "article": {
-						"@context": "https://schema.org",
+                        "@context": "https://schema.org",
                         "@type": "Article",
                         "headline": "Breaking News: Event X",
                         "datePublished": "2023-01-01T08:00:00Z",
                         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-						"inLanguage": "English",
+                        "inLanguage": "English",
                         "author": {
                           "@type": "Person",
                           "name": "Journalist A"
                         },
-					    "image": {
-						  "url": "link",
-						  "description": "Image for the article"
-						},
-						"url": "https://example.com/article/1",
-                      "prov": {
-						"@context": "http://www.w3.org/ns/prov#",
-                        "entity": "article:1",
-                        "activity": "publishing",
-                        "agent": "journalist:123",
-                        "used": [
-                          {"entity": "source:456"}
-                        ],
-                        "generated": [
-                          {"entity": "article:1"},
-                          {"entity": "media:789"}
-                        ]
+                        "image": {
+                          "url": "link",
+                          "description": "Image for the article"
+                        },
+                        "url": "https://example.com/article/1",
+                        "prov": {
+                          "@context": "http://www.w3.org/ns/prov#",
+                          "entity": "article:1",
+                          "activity": "publishing",
+                          "agent": "journalist:123",
+                          "used": [
+                            {
+                              "entity": "source:456"
+                            }
+                          ],
+                          "generated": [
+                            {
+                              "entity": "article:1"
+                            },
+                            {
+                              "entity": "media:789"
+                            }
+                          ]
+                        }
                       }
                     }
                   ]
@@ -54,7 +61,8 @@
             }
           }
         }
-      },
+                  },
+
       "post": {
         "summary": "Create a new resource with the online article",
         "requestBody": {
@@ -109,7 +117,7 @@
                         "author": {
                           "@type": "Person",
                           "name": "Journalist A"
-                        }
+                        },
 						"image": {
 						  "url": "link",
 						  "description": "Image for the article"
@@ -153,33 +161,40 @@
                       "id": 1,
                       "article": {
                         "@context": "https://schema.org",
-						"@type": "Article",
+                        "@type": "Article",
                         "headline": "Breaking News: Event X",
-                        "genre" : "Sports",
-						"datePublished": "2023-01-01T08:00:00Z",
+                        "genre": "Sports",
+                        "datePublished": "2023-01-01T08:00:00Z",
                         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
                         "inLanguage": "English",
-						"author": {
+                        "author": {
                           "@type": "Person",
                           "name": "Journalist A"
                         },
-						"image": {
-						  "url": "link",
-						  "description": "Image for the article"
-						},
-						"url": "https://example.com/article/1",
-                      "prov": {
-						"@context": "http://www.w3.org/ns/prov#",
-                        "entity": "article:1",
-                        "activity": "publishing",
-                        "agent": "journalist:123",
-                        "used": [
-                          {"entity": "source:456"}
-                        ],
-                        "generated": [
-                          {"entity": "article:1"},
-                          {"entity": "media:789"}
-                        ]
+                        "image": {
+                          "url": "link",
+                          "description": "Image for the article"
+                        },
+                        "url": "https://example.com/article/1",
+                        "prov": {
+                          "@context": "http://www.w3.org/ns/prov#",
+                          "entity": "article:1",
+                          "activity": "publishing",
+                          "agent": "journalist:123",
+                          "used": [
+                            {
+                              "entity": "source:456"
+                            }
+                          ],
+                          "generated": [
+                            {
+                              "entity": "article:1"
+                            },
+                            {
+                              "entity": "media:789"
+                            }
+                          ]
+                        }
                       }
                     }
                   ]
@@ -192,58 +207,57 @@
 	}
 },
 "components": {
-    "schemas": {
-      "Article": {
-        "type": "object",
-        "properties": {
-          "@context": {
-            "type": "string",
-            "example": "https://schema.org"
-          },
-
-          "@type": {
-            "type": "string",
-            "example": "Article"
-          },
-          "headline": {
-            "type": "string",
-            "example": "Breaking News: Event X"
-          },
-		  "genre": {
-			  "type": "string",
-			  "example" :"Sports"
-		  },
-          "datePublished": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2023-01-01T08:00:00Z"
-          },
-          "description": {
-            "type": "string",
-            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
-          },
-		  "inLanguage": {
-			"type" : "string",
-			"example" : "English"
-		  },
-          "author": {
-            "type": "object",
-            "properties": {
-              "@type": {
-                "type": "string",
-                "example": "Person"
-              },
-              "name": {
-                "type": "string",
-                "example": "Journalist A"
-              }
+  "schemas": {
+    "Article": {
+      "type": "object",
+      "properties": {
+        "@context": {
+          "type": "string",
+          "example": "https://schema.org"
+        },
+        "@type": {
+          "type": "string",
+          "example": "Article"
+        },
+        "headline": {
+          "type": "string",
+          "example": "Breaking News: Event X"
+        },
+        "genre": {
+          "type": "string",
+          "example": "Sports"
+        },
+        "datePublished": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-01T08:00:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
+        },
+        "inLanguage": {
+          "type": "string",
+          "example": "English"
+        },
+        "author": {
+          "type": "object",
+          "properties": {
+            "@type": {
+              "type": "string",
+              "example": "Person"
+            },
+            "name": {
+              "type": "string",
+              "example": "Journalist A"
             }
-          },
-		  "url": {
-			"type": "string",
-			"format": "uri",
-			"example": "https://example.com/article/1"
-		}
+          }
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "example": "https://example.com/article/1"
+        }
       },
       "ResourceInput": {
         "type": "object",
@@ -254,11 +268,11 @@
           },
           "article": {
             "$ref": "#/components/schemas/Article"
-		  },
+          },
           "prov": {
             "type": "object",
             "properties": {
-			  "@context": {
+              "@context": {
                 "type": "string",
                 "example": "http://www.w3.org/ns/prov#"
               },
@@ -304,4 +318,4 @@
       }
     }
   }
-}
+}}
