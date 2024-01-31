@@ -1,0 +1,20 @@
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix schema: <http://schema.org/> .
+@prefix ex: <http://example.org/> .
+
+ex:article1 a prov:Entity ;
+    schema:headline "Sample Article Title" ;
+    schema:articleBody "This is the content of the article." ;
+    schema:datePublished "2024-01-30T12:00:00" ;
+    schema:author "John Doe" .
+
+ex:writingActivity a prov:Activity ;
+    prov:wasAssociatedWith ex:author1 .
+
+ex:author1 a prov:Agent ;
+    prov:actedOnBehalfOf ex:organization1 .
+
+ex:organization1 a prov:Agent ;
+    prov:wasAttributedTo "Example News" .
+
+ex:article1 prov:wasGeneratedBy ex:writingActivity .
