@@ -3,20 +3,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Article
 from .serializers import ArticleSerializer
+from .RDFLibGraph import CreateRDFGraph
+
 
 class ArticleSearchView(APIView):
-    def get(self, request):
-        article_title = request.query_params.get('title', '')
-        if not article_title:
-            return Response({'error': 'Article title is required'}, status=status.HTTP_400_BAD_REQUEST)
+    @staticmethod
+    def get(request):
+        json_file = "C:/Users/Alex/Desktop/MLC/De refacut/DAW/Proiect/NEP/api/example.json"
+        rdf_graph = CreateRDFGraph(json_file)
+        rdf_graph.open_json_file()
+        articles = rdf_graph.create_graph()
 
-        # Perform the search using PROV-O and Schema.org
-        # This is where you implement the logic to search for the article
-
-        # For now, let's just return a placeholder response
-        articles = Article.objects.filter(title__icontains=article_title)
-        serializer = ArticleSerializer(articles, many=True)
         if not articles:
             return Response({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(articles, status=status.HTTP_200_OK)

@@ -2,7 +2,7 @@
 from django.core.management.base import BaseCommand
 from api.models import Article  # Adjust the import path
 from datetime import datetime
-
+from api.RDFLibGraph import CreateRDFGraph
 
 class Command(BaseCommand):
     help = 'Create example articles in the database'
@@ -10,26 +10,12 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Clear existing data
         Article.objects.all().delete()
-
+        json_file = "C:/Users/Alex/Desktop/MLC/De refacut/DAW/Proiect/NEP/api/example.json"
+        rdf_graph = CreateRDFGraph(json_file)
+        rdf_graph.open_json_file()
+        articles = rdf_graph.create_graph()
+        print(articles)
+        Article.object.create("Hello")
         # Create example articles
-        Article.objects.create(
-            title='Breaking',
-            content='Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-            published_on=datetime.now(),
-            source_name='News Agency A',
-            author_name='Journalist A',
-            language='English',
-            topic='Politics',
-        )
-
-        Article.objects.create(
-            title='Sports Update: Championship Finals',
-            content='Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-            published_on=datetime.now(),
-            source_name='Sports Network',
-            author_name='Reporter B',
-            language='English',
-            topic='Sports',
-        )
 
         # Add more articles as needed
