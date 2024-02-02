@@ -1,0 +1,81 @@
+@prefix ns1: <http://www.schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+prov:1 a prov:Organization ;
+    ns1:name "EuropeanaStories" .
+
+<https://dbpedia.org/page/Actor> a skos:Concept ;
+    skos:related ns1:110000 .
+
+<https://dbpedia.org/page/Art> a skos:Concept ;
+    skos:related ns1:10000 .
+
+ns1:2 ns1:associatedArticle ns1:10000,
+        ns1:110000 ;
+    ns1:contentUrl "http://example.com/image2.jpg" ;
+    ns1:description "Description of image 2" ;
+    ns1:encodingFormat "jpeg" ;
+    ns1:height 200 ;
+    ns1:width 400 .
+
+ns1:3 a ns1:VideoObject ;
+    ns1:associatedArticle ns1:10000,
+        ns1:110000 ;
+    ns1:contentUrl "http://example.com/video1.gif" ;
+    ns1:encodingFormat "jpeg" ;
+    ns1:height 200 ;
+    ns1:width 400 .
+
+<https://dbpedia.org/page/Music> a skos:Concept ;
+    skos:related ns1:10000,
+        ns1:110000 .
+
+ns1:1 a ns1:Person,
+        prov:Agent ;
+    ns1:associatedArticle ns1:10000,
+        ns1:110000 ;
+    ns1:contentUrl "http://example.com/image1.jpg" ;
+    ns1:description "Description of image 1" ;
+    ns1:encodingFormat "jpeg" ;
+    ns1:height 200 ;
+    ns1:name "Author 1" ;
+    ns1:nationality "Nationality 1" ;
+    ns1:width 400 ;
+    prov:actedOnBehalfOf prov:1 .
+
+ns1:10000 a ns1:Article ;
+    ns1:articleBody "Content" ;
+    ns1:associatedMedia ns1:1,
+        ns1:2,
+        ns1:3 ;
+    ns1:datePublished "2023-01-01" ;
+    ns1:description "Description of Article 1" ;
+    ns1:genre "Contest" ;
+    ns1:inLanguage "English" ;
+    ns1:keywords <https://dbpedia.org/page/Art>,
+        <https://dbpedia.org/page/Music> ;
+    ns1:name "Article 1" ;
+    ns1:url "http://example.com/article1" ;
+    ns1:wordCount 500 ;
+    prov:generatedAtTime "2012-03-02"^^xsd:date ;
+    prov:wasAttributedTo ns1:1 .
+
+ns1:110000 a ns1:Article ;
+    ns1:articleBody "Content" ;
+    ns1:associatedMedia ns1:1,
+        ns1:2,
+        ns1:3 ;
+    ns1:datePublished "2023-01-01" ;
+    ns1:description "Description of Article 1" ;
+    ns1:genre "Contest" ;
+    ns1:inLanguage "English" ;
+    ns1:keywords <https://dbpedia.org/page/Actor>,
+        <https://dbpedia.org/page/Music> ;
+    ns1:name "Article 1" ;
+    ns1:url "http://example.com/article1" ;
+    ns1:wordCount 500 ;
+    prov:generatedAtTime "2012-03-02"^^xsd:date ;
+    prov:wasAttributedTo ns1:1 .
+
