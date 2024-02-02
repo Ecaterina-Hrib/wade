@@ -12,7 +12,8 @@ def articles():
     json_file = "C:/Users/Alex/Desktop/MLC/De refacut/DAW/Proiect/NEP/api/example.json"
     rdf_graph = CreateRDFGraph(json_file)
     rdf_graph.open_json_file()
-    articles = rdf_graph.create_graph()
+    aarticles = rdf_graph.create_graph()
+    articles = rdf_graph.query()
     return articles
 
 
@@ -39,6 +40,7 @@ class AllArticlesView(APIView):
 # """
 #         sparqlQuery = SparqlHandler()
 #         results = sparqlQuery.execute_query(query)
+
         if not allArticles:
             return Response({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
         return render(request, 'articles_list.html', {'articles': allArticles}, status=status.HTTP_200_OK)

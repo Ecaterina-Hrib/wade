@@ -84,4 +84,13 @@ class CreateRDFGraph:
                 self.graph_serialized = g.serialize(format='turtle')
         return self.graph_serialized
     def query(self):
-        self.graph_serialized
+        prepareQuery = """
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT * WHERE {
+          ?sub ?pred ?obj .
+        } LIMIT 10
+        """
+        results = self.graph_serialized.query(prepareQuery)
+        return results
