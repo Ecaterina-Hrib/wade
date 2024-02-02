@@ -2,7 +2,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 class SparqlHandler:
-    database_name = "#/dataset/test-dataset/"
+    database_name = "nep"
     localhost = f"http://localhost:3030/{database_name}"
 
     def execute_query(self, query):
