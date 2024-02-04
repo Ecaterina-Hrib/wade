@@ -69,6 +69,7 @@ class FilterAuthorKeywordView(APIView):
     def get(self, request, *args, **kwargs):
         global keyword
         global authorsList
+        authorsList = list()
         sparqlQuery = SparqlHandler()
         resultsKeyword = sparqlQuery.execute_query(prefixes + sparql_generic_entries['in_keywords'])
 
@@ -77,14 +78,8 @@ class FilterAuthorKeywordView(APIView):
             if result['keywords']['value'].split('/')[-1] is not '':
                 keywordList.append(result['keywords']['value'].split('/')[-1])
 
-        resultsArticles = sparqlQuery.execute_query(articlequery)
-        articlesList = list()
-        for result in resultsArticles:
-            authorsList = list()
-            articleName = result['articlename']['value']
-            articlesList.append(articleName)
 
-        if request.GET.get('selectedOption') in keywordList:
+        if request.GET.get('selectedOption'):
             keyword = request.GET.get('selectedOption')
 
             resultsAuthors = sparqlQuery.execute_query(
@@ -109,7 +104,7 @@ class FilterAuthorKeywordView(APIView):
             resultsRelatedArticles = sparqlQuery.execute_query(prefixes + relatedArticlesQuery)
             return JsonResponse({'relatedArticles': resultsRelatedArticles})
 
-        if not resultsArticles:
+        if not keywordList:
             return JsonResponse({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
 
         return render(request, 'filter_by_author_keyword_articles.html',

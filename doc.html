@@ -112,7 +112,7 @@
             <img src="c4-2.png" alt="A c4 diagram" class="center">
             <p> Level 3 C4 Diagram:</p>
             <img src="c4-3.png" alt="A c4 diagram" class="center">
-            </section>
+        </section>
         <section id="Dataset">
             <h2> 3. Building Custom dataset: </h2>
             <h5> Crawling data json:</h5>
@@ -162,7 +162,7 @@
 
         </section>
         <section id="Modelling_data">
-            <h2> 3. Modelling data </h2>
+            <h2> 4. Modelling data </h2>
             <p> API documentation:</p>
             <h3>  OpenAPI: </h3>
             <p>A linked json file in OpenAPI made using:</p>
@@ -208,9 +208,90 @@
             <img src="Screenshot_2.jpg" alt="Close up graph" class="center">
 
         </section>
+        <section id="Functionality">
+            <h2>5. Functionality</h2>
+            <h5>Overview</h5>
+            <p>Using Django, we used the view controller mostly, with other additional Python files, one was used to
+                help us with creating the ontology in Turtle format, from the original Json format; one was used for SPARQL queries
+                and one for the communication with the Jena Fuseki server.</p>
+            <p>In the RDFLibGraph, we created a Class that takes the JSON file and goes through a series of
+                transformations so that we make the Turtle file as detailed as possible.</p>
+            <pre><b>
+                article_uri = URIRef(article_data['articleId'])
+                g.add((article_uri, RDF.type, schema.Article))
+            </b></pre>
+            <p>After we connect every information that we needed in the handmade graph, we serialize it in Turtle format and
+            save it in <b>output.tll</b> that is being uploaded in the Apache Jena Fuseki server.
+            </p>
+            <p>Above is an example of how we made it possible to make the graph in Python, using the<b><a href="https://rdflib.readthedocs.io/en/stable/">rdflib</a></b>library</p>
+            <p>The other additional Python files were used for SPARQL queries that were sent to the Apache Jena Fuseki server.
+            One of it contains a few SPARQL queries that were build for specific searches, while the other one imports the
+            <b><a href="https://pypi.org/project/SPARQLWrapper/">SPARQLWrapper</a></b>. With it, we make sure that the query
+            that we want to send to the server is being sent, and we get a result that is being sent to the View Python file.
+            Below is an example of SPARQL queries</p>
+            <pre><b>
+                SELECT ?related_article ?imageUrl
+                WHERE {
+                  ?related_article a ns1:Article ;
+                        ns1:genre {} ;
+                        ns1:name ?article_name ;
+                        ns1:articleBody ?article_body ;
+                        prov:wasAttributedTo ?person ;
+                        ns1:associatedMedia ?imageId .
+                    ?imageId ns1:contentUrl ?imageUrl .
+                  ?person a ns1:Person;
+                     ns1:name ?name_author;
+                }
+                </b>This one searches for the articleID and the imageUrl that have a specific genre given by the user.
+                <b>
+                    SELECT ?authorname
+                    WHERE {
+                      ?articles ns1:keywords {} .
+                      ?articles prov:wasAttributedTo ?author .
+                      ?author rdf:type ns1:Person .
+                      ?author ns1:name ?authorname.
+                    }
+            </b>Here we search for the author name of articles that have a specific keyword given by the user.
+            </pre>
+            <h5>Backend</h5>
+            <p>Here is a Django API that uses Django REST Framework for filtering and retrieving information about
+                articles based on keywords, authors, genres and any other additional filter. It has several API endpoints
+                that use SPARQL queries to retrieve the RDF graph for the specific filter. It also renders the HTML templates
+                dynamically based on the query results. HTML templates include options for filtering by keywords, authors and
+                genres. These API endpoints return JSON responses containing the options selected by the user. For every error,
+                it returns appropriate HTTP status codes. We have used global variables so that the information retrieved
+                from the frontend remains the same in multiple <b>if else statements</b>. We have used different classes for every
+                webpage so that we know where and when everything is and is easier for error handling.</p>
+            <p>One of the API endpoints that we have used is named <b>FilterAuthorKeywordView</b>. First of all, we retrieve
+                a list of keywords that we want the user to select from. We then render them to the user, where he selects the keyword
+                that wants to search articles from. After he pressed the button confirming that selection, we catch that with
+                an if where we make another SPARQL query where we get authors that are connected to articles that have the
+                user selected keyword. After that, the user must select the author that wants to see articles from. After
+                that selection is done, we send a JSON response to the webpage with the information the user requested.
+            <pre><b>
+            if request.GET.get('selectedOption'):
+                keyword = request.GET.get('selectedOption')
 
+                resultsAuthors = sparqlQuery.execute_query(
+                    prefixes + sparql_generic_entries['in_author'].replace('{}',"&lt;https://dbpedia.org/page/" + keyword + ">"))
+                for result in resultsAuthors:
+                    authorsList.append(result['authorname']['value'])
+
+                return JsonResponse({'authors': resultsAuthors})
+        </b></pre></p>
+        <h5>Frontend</h5>
+            <p>In frontend we have combined the stylesheet, the html code and the javascript in one single file, as it was
+            more convient for smaller webpage with few functionalities. First of all, we create 2 options boxes that will
+            be filled with keywords and later authors, when the user presses the first button. We have created 2 buttons so
+            that the functionalities do not overwrite each other when going through the filter. The first option box
+            is populated with keyword variants that the user can select from. After that, the other option box is filled with
+            authors that are related to the articles that contain those keywords. After the user is deciding on an author,
+            all the articles written by that person are being displayed on the webpage, with the image in the thumbnail and
+            the articleId that redirects to the news</p>
+            <img src="filterkeywordauthor.PNG" alt="Example filter keyword/author" class="center">
+        </section>
         <section id="References">
-            <h2> 5. References: </h2>
+            <h2> 6. References: </h2>
              <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/projects/index.html"> Project requirement </a>
             <p> Information tooked from: </p>
             <ul>
@@ -220,7 +301,7 @@
                 <li> <a href="https://www.w3.org/TR/prov-o/"> PROV ontology</a> </li>
                 <li> <a href="https://aclanthology.org/L12-1323/"> About DBpedia </a> </li>
                 <li> <a href="https://jena.apache.org/documentation/fuseki2/"> Jena Fuseki </a> </li>
-                \<li> <a href="https://www.w3.org/2009/08/skos-reference/skos.html"> SKOS Schema </a> </li>
+                <li> <a href="https://www.w3.org/2009/08/skos-reference/skos.html"> SKOS Schema </a> </li>
             </ul>
 
         </section>
