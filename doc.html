@@ -51,12 +51,15 @@
                             <li class="no-number"><a href=""><span>2.2 </span> C4 Diagrams </a></li>
                         </ol>
                     </li>
+                    <li class="no-number"><a href="#Modelling_data"> <span>3. </span> Building Custom Dataset </a>
+                    </li>
 
-                    <li class="no-number"><a href="#Modelling_data"> <span>3. </span>Modelling data </a>
+                    <li class="no-number"><a href="#Modelling_data"> <span>4. </span>Modelling data </a>
                         <ol role="directory">
 
-                            <li class="no-number"><a href=""><span>3.1 </span> Modelling Data with OpenAPI</a></li>
-
+                            <li class="no-number"><a href=""><span>4.1 </span> OpenAPI</a></li>
+                            <li class="no-number"><a href=""><span>4.2 </span> Ontology structure</a></li>
+                            <li class="no-number"><a href=""><span>4.2 </span> Linked data Graph</a></li>
                         </ol>
                     </li>
 
@@ -73,63 +76,151 @@
         <section id="description" role="doc-intro">
             <h2> 1. Description of the project</h2>
             <p>
-                A web application able to model and manage using external source of searching web news provenance for an online
-                article textual, multimedia etc. For the search source will be used DBpedia, or Wikidata, using schema.org RDFa
-                and JSON-LD with an SPARQL endpoint.
-
+                A web application meant to query and process linked data regarding web news, and news provenance, for an online article
+                textual or multimedia content.
 
             </p>
             <p>
                 The application is destined for persons who want to find out the provenance for a web news online
-                article and its originality.
+                article and it's data, and search with different filters.
+                The application is using Jena Fuseki for data storing, updating and searching data using SPARQL queries.
             </p>
         </section>
 
         <section id="architecture">
-            <h2> 2. Architecture </h2>
+            <h2> 2. Architecture: </h2>
             <p>
-               As programming language will be used Python and Django Framework for the development of the application.</p>
+               As programming language is used Python and Django Framework for the development of the application.</p>
             <p> The Django Framework uses MVT architecture pattern being the Model-View-Template, where templates act like controllers.</p>
                 <p>This pattern is derived from MVC(Model-View-Controller), the three levels of architecture or 3 components.
                    The Model component stores the data that is being transmitted between Controller component and the View component. </p>
                  <p>  Controllers are the actions made on a specific objects and it's behaviour in certain situations.
                    The View, is what a client sees in the web application, is the UI transmitted to the user.
             </p>
-            <p> The application will have the ability to let user to model the search for a web news provenance,
-                such as query execution, visualise response and recommend new searches or similar ones. </p>
-            <p> The search will be made in DBpedia or Wikidata, and using SPARQL endpoint and JSON-LD to manage the data modelling.</p>
-            <p> The application will have different filters for finding the best occurences.
-            <h3> Use case Diagram </h3>
+            <p> The application will have the ability to let the user, to model the search for an article,
+                such as filtering info data using query execution, visualise response and recommend new searches or similar ones. </p>
+            <p> The search data is formed by our custom-built Dataset from crawling in different web news sites,
+                and extracting the needed information to build the graph ontology
+                 and using SPARQL endpoint to manage the data modelling.</p>
+            <p> The application will have different filters for finding the best occurrences.
+            <h3> Use case Diagram: </h3>
             <img src="use-case.png" alt="A use case diagram" class="center">
             <h3> C4 Diagrams </h3>
-            <p> Level 1 C4 Diagram</p>
+            <p> Level 1 C4 Diagram:</p>
             <img src="c4-1.png" alt="A c4 diagram" class="center">
-            <p> Level 2 C4 Diagram</p>
+            <p> Level 2 C4 Diagram:</p>
             <img src="c4-2.png" alt="A c4 diagram" class="center">
-            <p> Level 3 C4 Diagram</p>
+            <p> Level 3 C4 Diagram:</p>
             <img src="c4-3.png" alt="A c4 diagram" class="center">
             </section>
+        <section id="Dataset">
+            <h2> 3. Building Custom dataset: </h2>
+            <h5> Crawling data json:</h5>
+            <p>Here is the information tooked from each web news article in order to build our custom graph</p>
+            <p>The articles used in the processing of the knowledge graph were provided by libertatea.ro,
+                we choose this site because we could take the information we needed for the processing.
+                We crawled about 500 fresh editorials on different topics such as Fashion, Tech, News, Politcs, Lifestype, Horoscope etc.</p>
+            <p> The information was parsed from the json-ld provided by the web news application throught the crawler that iterated over all approximately 500 articles</p>
+            <h4>Example crawled article</h4>
+            <pre>
+     {
+    "article2": {
+      "articleName": "Expert: Prețul gazelor va exploda în România după perioada de plafonare",
+      "articleBody": "\nPopulația va avea facturi facturi duble la gaze din aprilie 2025, după expirarea perioadei de plafonare a prețurilor, dacă Guvernul nu va lua decizii care să evite acest lucru, arată, într-o analiză, Dumitru Chisaliță - președintele asociației Energia Inteligentă.\n\n\n\n\n\n\n\nPentru protejarea consumatorilor de gaze în 2022 autoritățile au plafonat prețul gazelor la 0,31 de lei/kWh, cu despăgubirea furnizorilor care au costuri peste acest nivel. Plafonarea este valabilă până în luna aprilie a anului 2025.\n\n\n\nÎnsă acest lucru a dus la mai multe efecte pe piața gazelor, conform expertului:\n\n\n\n\nDispariția concurenței și menținerea unor prețuri mari pe piața gazelor.\n\n\n\nEșecul liberalizării din 2020, în principal din lipsa pregătirii consumatorilor, peste care s-au suprapus comportamentele abuzive ale unor furnizori și inacțiunea „câinilor de pază” ANRE, ANPC și Consiliul Concurenței, care, combinate cu criza gazelor, au dus la erodarea ideii de piață liberă.\n\n\n\nLecția însușită de autorități cum că piața liberă înseamnă mai puțini bani la buget și mai multe critici.\n\n\n\nUE a acceptat modificarea ideii care a stat la baza nașterii sale, respectiv libera circulație a mărfurilor.\n\n\n\n\n\nMenținerea prețurilor a fost determinată și de faptul că prin schema de compensare a diferenței între prețurile plafonate și costurile de achiziție se acceptau orice prețuri pentru gazele achiziționate. Această situație va fi greu de înlăturat și va necesita un timp în care reapariția concurenței ar putea să reechilibreze lucrurile. Estimăm că această situație nu poate să fie mai mică de un an.\nDumitru Chisăliță, președinte Asociația Energia Inteligentă:\n\n\n\nDumitru Chisăliță, președinte Asociația Energia Inteligentă\n\n\n\nPatru variante\n\n\n\nAcesta explorează patru opțiuni pe care le are statul.\n\n\n\n1. Varianta de a nu face nimic. „Prețul gazelor în contractele de vânzare gaze, care sunt suspendate până în 31 martie 2025, sunt la un nivel de cca 0,55 de lei/kWh, preț care cel mai probabil va rămâne valabil cel puțin până în vara anului 2025. Astfel, începând cu luna aprilie 2025, prețurile din facturi vor fi duble”, spune acesta. Expertul estimează că în vara anului 2025 concurența va reveni timid, iar în cel mai bun caz abia din 2026.\n\n\n\n2. Pregătirea reliberalizării pieței de gaze. Dumitru Chisăliță spune că pentru a preveni ca prețurile din contractele de gaze, care sunt duble acum, să devină efective, autoritățile trebuie să ia mai multe decizii. Acestea sunt informarea consumatorilor, profesionalizarea ANRE, ANPC și Consiliului Concurenței, înființarea unui centru de soluționare alternativă a litigiilor de pe piața energiei. Pe lângă acestea, el cere suspendarea pe 3 ani a prevederii din Codul Civil care permite furnizorilor să prelungească contractele fără semnătura efectivă a clienților. De asemenea, cere organizarea de către ANRE a unor sesiuni/acțiuni de ofertare concurențială de gaze începând cu 1 aprilie 2024, pentru refacerea concurenței, plus dezvoltarea unor mecanism transparente de suspendare a pieței libere în anumite momente și mecanismele aplicate în această perioadă.\n\n\n\n3. Menținerea unei piețe semireglementate. În această variantă rămâne în vigoare sistemul actual, în care se suspendă prețul din contracte și se aplică un preț plafonat, cu plata de la buget a diferenței între costurile de achiziție ale furnizorilor și prețul plafonat.\n\n\n\n4. Varianta reglementării pieței. Despre aceasta spune că este puțin probabil să fie acceptată de Uniunea Europeană. „Dacă varianta semireglementării a fost și probabil poate să rămână o variantă acceptată la nivelul UE, reglementarea pieței de gaze este o opțiune puțin probabilă, ținând cont de reglementările europene. Varianta aceasta va aduce prețuri care se bazează pe metoda cost plus, ceea ce nu previzionează prețuri mai mici la gaze în viitor”, conform lui Chisăliță.\n\n\n\nDoar piața liberă aduce prețuri mici\n\n\n\nAcesta spune că din toate cele patru variante, doar cea a pieței libere ar aduce prețuri mai mici.\n\n\n\n„Reglementarea prețului nu încurajează eficiența în sectorul gazelor naturale și de aici, nu poate aduce reduceri ale costurilor și respectiv prețuri mai mici la gaze”, punctează acesta.\n\n\n\nConcomitent, varianta semireglementării nu va aduce prețurile cele mai mici, dar nici nu va impune schimbări în cadrul instituțiilor statului și nici înființarea unei entități de soluționare alternativă a litigiilor.\n",
+      "articleUrl": "https://www.libertatea.ro/stiri/expert-pretul-gazelor-va-exploda-in-romania-dupa-perioada-de-plafonare-4775730",
+      "articleDatePublished": "2024-01-15",
+      "multimedia_content": {
+        "image_1": {
+          "imageUrl": "https://static4.libertatea.ro/wp-content/uploads/2024/01/shutterstock1660250275-scaled.jpg",
+          "imageId": "https://www.libertatea.ro/stiri/expert-pretul-gazelor-va-exploda-in-romania-dupa-perioada-de-plafonare-4775730#primaryimage",
+          "width": 2560,
+          "height": 1709,
+          "imageDescription": "Expert: Prețul gazelor va exploda în România după perioada de plafonare"
+        }
+      },
+      "organization": {
+        "organizationName": "Libertatea",
+        "organizationId": "https://www.libertatea.ro#organization",
+        "organizationUrl": "https://www.libertatea.ro"
+      },
+      "author": {
+        "authorName": "Daniel Ionașcu",
+        "authorNationality": "RO",
+        "authorId": "https://www.libertatea.ro/autor/daniel-ionascu#person",
+        "authorUrl": "https://www.libertatea.ro/autor/daniel-ionascu"
+      },
+      "generatedAtTime": "2024-01-15T14:05:37+02:00",
+      "articleId": "https://www.libertatea.ro/stiri/expert-pretul-gazelor-va-exploda-in-romania-dupa-perioada-de-plafonare-4775730#article",
+      "articleDescription": "Știri energie ",
+      "articleLanguage": "ro_RO",
+      "genre": "Bani și Afaceri, Ştiri",
+      "wordCount": 757,
+      "keywords": "Știri energie"
+    }
 
+            </pre>
+
+        </section>
         <section id="Modelling_data">
             <h2> 3. Modelling data </h2>
-            <p> API documentation</p>
-            <h3> RESTAPI in OpenAPI </h3>
+            <p> API documentation:</p>
+            <h3>  OpenAPI: </h3>
             <p>A linked json file in OpenAPI made using:</p>
-            <p> - schema.org Article class derived from CreativeWork class for article; </p>
-            <p> - PROV-O ontology for provenance; </p>
             <p>Click <a href="OpenAPISpec.json">HERE</a>to view JSON file in another tab.</p>
+            <h3>  Data structure: </h3>
+            <p> The classes used in modelling are: </p>
+            <p> - schema.org Article class derived from CreativeWork class for article; </p>
+            <p> - schema.org Organization class for the publication; </p>
+            <p> - schema.org Person class for author; </p>
+            <p> - schema.org VideoObject class for multimedia content; </p>
+            <p> - skos Concept class for keywords search; </p>
+            <p> - PROV-O ontology for provenance; </p>
+            <p>
+                The URI Reference for <b>articles</b> is "articleId" from json,
+                and to the object were attached the literals for name,
+                articleBody, datePublished, description, inLanguage, url, genre, wordCount,
+                generatedAtTime, keywords all from the Article class.
+                The <b>multimedia content</b> , as URI Reference was "imageId" or "videoId" from json,
+                and as literal used were attributes contentUrl, description, width and height.
+                Then it was associated the URI for article using VideoObject to the multimedia_uri,
+                and multimedia uri linked with article uri using associatedArticle predicate.
+                The <b>author</b> information was structured using Person class,
+                added the URI Reference for the authorId from json and then article uri was linked to author uri.
+                The literals for author were authorName, authorNationality.
+                The author uri was linked to the <b>PROV ontology</b> that uses actedOnBehalfOf and linked it to the organization were it takes part.
+                The <b>organization</b> is using the Organization class from schema.org and is linked to the author.
+                Skos Concept class is used on the keywords structure, for a more efficient link between concepts.
+            </p>
+            <p> We use DBpedia to link the keywords in the Skos:Concept class to actual urls from the platform. Example below: </p>
+                <p><b>https://dbpedia.org/page/Alcool a skos:Concept ;</b></p>
+                    <p><b>skos:related "https://www.libertatea.ro/lifestyle/este-mai-sanatos-sa-bei-putin-decat-sa-nu-bei-deloc-ce-spun-trei-cercetatori-si-un-nutritionist-4557539#article .</b></p>
+
+
+            <p> Turtle file for custom modeled data is:<a href="NEP/output.ttl"><b>Turtle file</b></a></p>
+            <p>For providing the SPARQL endpoint and persistent storing the data we used Apache Jena Fuseki server</p>
+            <h3>  Linked data Graph: </h3>
+            <h4 class="center"> Web articles provenance linked custom linked dataset visualised</h4>
+            <img src="d0f3ddaf-0329-471d-8c6a-bd3150232aa0.jpg" alt="Knowledge Graph visualised" class="center">
+            <h4 class="center"> Linked graph close up</h4>
+            <img src="Screenshot_3.jpg" alt="Knowledge Graph visualised" class="center">
+            <h4 class="center"> Linked graph close up</h4>
+            <img src="Screenshot_4.jpg" alt="Close up graph" class="center">
+            <img src="Screenshot_2.jpg" alt="Close up graph" class="center">
 
         </section>
 
         <section id="References">
-            <h2> 5. References </h2>
+            <h2> 5. References: </h2>
              <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/projects/index.html"> Project requirement </a>
             <p> Information tooked from: </p>
             <ul>
                 <li> <a href="https://schema.org/CreativeWork"> CreativeWork from schema.org </a> </li>
                 <li> <a href="https://schema.org/Article"> Article  from schema.org </a> </li>
-                <li> <a href="https://www.w3.org/TR/prov-o/#Activity"> PROV-O </a> </li>
+                <li> <a href="https://schema.org/Person"> Person  from schema.org </a> </li>
+                <li> <a href="https://www.w3.org/TR/prov-o/"> PROV ontology</a> </li>
                 <li> <a href="https://aclanthology.org/L12-1323/"> About DBpedia </a> </li>
+                <li> <a href="https://jena.apache.org/documentation/fuseki2/"> Jena Fuseki </a> </li>
+                \<li> <a href="https://www.w3.org/2009/08/skos-reference/skos.html"> SKOS Schema </a> </li>
             </ul>
 
         </section>
