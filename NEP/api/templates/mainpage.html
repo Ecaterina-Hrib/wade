@@ -1,4 +1,4 @@
-<!-- frontend/templates/articles_list.html -->
+<!-- frontend/templates/specific_articles.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +9,13 @@
 <body>
     <h1>Article List</h1>
     <ul>
+        {% for article in articles %}
             <li>
-                <h2>{{ articles.title }}</h2>
-                <p>{{ articles.content }}</p>
+                <p>{{ article.articlename.value }}</p>
+                <p>{{ article.wordCount.value }}</p>
+                <p>{{ article.authorname.value }}</p>
             </li>
+        {% endfor %}
     </ul>
 </body>
 </html>
