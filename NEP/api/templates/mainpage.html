@@ -1,21 +1,59 @@
-<!-- frontend/templates/specific_articles.html -->
+<!-- filter_by_keyword_articles.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article List</title>
+    <title>Specific Articles</title>
+    <style>
+          body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .result-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 300px; /* Adjust the maximum width as needed */
+            box-sizing: border-box;
+            flex: 0 0 calc(33.33% - 20px);
+        }
+
+        .result-container img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        #result {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; /* Adjust as needed */
+        }
+    </style>
 </head>
 <body>
-    <h1>Article List</h1>
-    <ul>
+    <h1>Specific Articles</h1>
+    <h2>Articles:</h2>
+     <div id="result">
         {% for article in articles %}
-            <li>
-                <p>{{ article.articlename.value }}</p>
-                <p>{{ article.wordCount.value }}</p>
-                <p>{{ article.authorname.value }}</p>
-            </li>
+        <div class="result-container">
+            <ul>
+                <a href = {{article.article.value}}>{{ article.article.value }}</a>
+                <li>{{ article.articlename.value }}</li>
+                <li>{{ article.authorname.value }}</li>
+            </ul>
+        </div>
         {% endfor %}
-    </ul>
 </body>
 </html>

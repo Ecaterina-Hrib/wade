@@ -5,6 +5,7 @@ from .RDFLibGraph import CreateRDFGraph
 from django.shortcuts import render
 from .SparqlHandler import SparqlHandler
 from django.http import JsonResponse
+from .sparql_generic_queries import sparql_generic_entries, prefixes, generic
 
 articlequery = """
         SELECT DISTINCT ?articlename ?authorname ?keyword  WHERE {
@@ -12,11 +13,6 @@ articlequery = """
   ?article <http://www.schema.org/name> ?articlename .
   ?article <http://www.w3.org/ns/prov#wasAttributedTo> ?author .
   ?author <http://www.schema.org/name> ?authorname .
-} 
-        """
-keywordQuery = """
-            SELECT DISTINCT ?keyword  WHERE {
-  ?article <http://www.schema.org/keywords> ?keyword .
 } 
         """
 
@@ -29,63 +25,123 @@ def articles():
     return articles_graph
 
 
-class ArticleSearchView(APIView):
+class FilterKeywordView(APIView):
     def get(self, request, *args, **kwargs):
         sparqlQuery = SparqlHandler()
-        resultsKeyword = sparqlQuery.execute_query(keywordQuery)
+        resultsKeyword = sparqlQuery.execute_query(prefixes + sparql_generic_entries['in_keywords'])
 
         keywordList = list()
         for result in resultsKeyword:
-            if result['keyword']['value'].split('/')[-1] is not '':
-                keywordList.append(result['keyword']['value'].split('/')[-1])
+            if result['keywords']['value'].split('/')[-1] is not '':
+                keywordList.append(result['keywords']['value'].split('/')[-1])
 
         resultsArticles = sparqlQuery.execute_query(articlequery)
 
         articlesList = list()
         for result in resultsArticles:
-            authorName = result['authorname']['value']
             articleName = result['articlename']['value']
-            if result['keyword']['value'].split('/')[-1] is not '':
-                keywordName = result['keyword']['value'].split('/')[-1]
-            articlesList.append((authorName, articleName, keywordName))
+            articlesList.append(articleName)
 
         if request.GET.get('selectedOption') in keywordList:
             keyword = request.GET.get('selectedOption')
+
             relatedArticlesQuery = """
-            SELECT ?articleId WHERE {
-            ?articleId <http://www.schema.org/keywords> <https://dbpedia.org/page/""" + keyword + """> .
+            SELECT ?related_article ?imageUrl WHERE {
+            ?articleId ns1:keywords <https://dbpedia.org/page/""" + keyword + """> .
+            ?articleId ns1:associatedMedia ?imageId .
+            ?imageId ns1:contentUrl ?imageUrl .
+            <https://dbpedia.org/page/""" + keyword + """> a skos:Concept;
+                    skos:related ?related_article.
             }"""
-            resultsRelatedArticles = sparqlQuery.execute_query(relatedArticlesQuery)
+            resultsRelatedArticles = sparqlQuery.execute_query(prefixes + relatedArticlesQuery)
+            print(keyword)
+            return JsonResponse({'relatedArticles': resultsRelatedArticles})
+        if not resultsArticles:
+            return JsonResponse({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
+
+        return render(request, 'filter_by_keyword_articles.html',
+                      {'keywords': keywordList, 'articles': articlesList}
+                      , status=status.HTTP_200_OK)
+
+
+class FilterAuthorKeywordView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        global keyword
+        global authorsList
+        sparqlQuery = SparqlHandler()
+        resultsKeyword = sparqlQuery.execute_query(prefixes + sparql_generic_entries['in_keywords'])
+
+        keywordList = list()
+        for result in resultsKeyword:
+            if result['keywords']['value'].split('/')[-1] is not '':
+                keywordList.append(result['keywords']['value'].split('/')[-1])
+
+        resultsArticles = sparqlQuery.execute_query(articlequery)
+        articlesList = list()
+        for result in resultsArticles:
+            authorsList = list()
+            articleName = result['articlename']['value']
+            articlesList.append(articleName)
+
+        if request.GET.get('selectedOption') in keywordList:
+            keyword = request.GET.get('selectedOption')
+
+            resultsAuthors = sparqlQuery.execute_query(
+                prefixes + sparql_generic_entries['in_author'].replace('{}',
+                                                                       "<https://dbpedia.org/page/" + keyword + ">"))
+            for result in resultsAuthors:
+                authorsList.append(result['authorname']['value'])
+
+            return JsonResponse({'authors': resultsAuthors})
+        if request.GET.get('selectedAuthor'):
+            print(request.GET.get('selectedAuthor'))
+            relatedArticlesQuery = """
+                        SELECT ?related_article ?imageUrl WHERE {
+                        ?articleId ns1:keywords <https://dbpedia.org/page/""" + keyword + """> .
+                        ?articleId ns1:associatedMedia ?imageId .
+                        ?imageId ns1:contentUrl ?imageUrl .
+                        <https://dbpedia.org/page/""" + keyword + """> a skos:Concept;
+                                skos:related ?related_article .
+                        ?articleId prov:wasAttributedTo ?author .
+                        ?author ns1:name \"""" + request.GET.get('selectedAuthor') + """\" .
+                        }"""
+            resultsRelatedArticles = sparqlQuery.execute_query(prefixes + relatedArticlesQuery)
             return JsonResponse({'relatedArticles': resultsRelatedArticles})
 
         if not resultsArticles:
             return JsonResponse({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
 
-        return render(request, 'specific_articles.html',
-                      {'keywords': keywordList, 'articles': articlesList}
+        return render(request, 'filter_by_author_keyword_articles.html',
+                      {'keywords': keywordList}
                       , status=status.HTTP_200_OK)
+
+
+class FilterByGenre(APIView):
+    def get(self, request, *args, **kwargs):
+        sparqlQuery = SparqlHandler()
+        resultsGenres = sparqlQuery.execute_query(prefixes + sparql_generic_entries['all_genres'])
+        genresList = list()
+        for result in resultsGenres:
+            if result['genre']['value'].split('/')[-1] is not '':
+                genresList.append(result['genre']['value'].split('/')[-1])
+
+        if request.GET.get('selectedOption') in genresList:
+            genre = request.GET.get('selectedOption')
+            resultsRelatedArticles = sparqlQuery.execute_query(
+                prefixes + sparql_generic_entries['in_genre'].replace('{}', "\"" + genre + "\""))
+            return JsonResponse({'relatedArticles': resultsRelatedArticles})
+        print(genresList)
+        if not genresList:
+            return Response({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
+        return render(request, 'filter_by_genre_articles.html', {'genres': genresList}, status=status.HTTP_200_OK)
 
 
 class AllArticlesView(APIView):
     @staticmethod
     def get(request):
-        # allArticles = articles()
-        query = """
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX schema: <http://schema.org/>
-PREFIX prov: <http://www.w3.org/ns/prov#>
-SELECT ?article ?articlename ?authorname ?wordCount WHERE {
-  ?article <http://www.schema.org/name> ?articlename .
-  ?article <http://www.schema.org/wordCount> ?wordCount .
-  ?article <http://www.w3.org/ns/prov#wasAttributedTo> ?author .
-  ?author <http://www.schema.org/name> ?authorname .
-} 
-"""
         sparqlQuery = SparqlHandler()
-        results = sparqlQuery.execute_query(query)
-        # print(results)
+        results = sparqlQuery.execute_query(prefixes + sparql_generic_entries['all_articles'])
         if not results:
             return Response({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
         return render(request, 'mainpage.html', {'articles': results}, status=status.HTTP_200_OK)

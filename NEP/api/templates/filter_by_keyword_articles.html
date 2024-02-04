@@ -1,0 +1,127 @@
+<!-- filter_by_keyword_articles.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specific Articles</title>
+    <style>
+         body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .result-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 0 0 calc(33.33% - 20px);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .result-container img {
+            display: block;
+            margin: 0 auto;
+        }
+        #result {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" id="redirectLink">Search by Keyword AND Author</a>
+    <h1>Specific Articles</h1>
+
+    <h2>Options:</h2>
+    <select id="filterKeywords">
+        <!-- Options will be dynamically populated using JavaScript -->
+    </select>
+
+    <button id="getDataButton">Get Data</button>
+
+    <h2>Result:</h2>
+    <p id="result"></p>
+
+    <script type="text/javascript">
+        var i,option,optionsSelect;
+        var usedkeywords = {{ keywords|safe }};
+        // Reference to the options select element
+        optionsSelect = document.getElementById("filterKeywords");
+        // Dynamically populate options
+        for (i = 0; i < usedkeywords.length; i++) {
+            option = document.createElement("option");
+            option.value = usedkeywords[i];
+            option.text = usedkeywords[i];
+            optionsSelect.add(option);
+        }
+
+        document.getElementById("redirectLink").addEventListener("click", function(event) {
+                        event.preventDefault();
+                        window.location.href = '../searchauthorkeyword';})
+
+        document.getElementById("getDataButton").addEventListener("click", function() {
+            var selectedOption = document.getElementById("filterKeywords").value;
+            // Use JavaScript to send a request to the Django backend with the selected option
+            fetch('/searchkeyword/?selectedOption=' + selectedOption,{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log(response);
+            return response.json();
+            })
+            .then(data => {
+
+          console.log('Response:', data);
+            if (data && data.relatedArticles && Array.isArray(data.relatedArticles)) {
+                const resultElement = document.getElementById("result");
+                resultElement.innerHTML = '';  // Clear previous results
+
+                data.relatedArticles.forEach(article => {
+                    if (article && article.related_article && article.related_article.value) {
+
+                        const resultContainer = document.createElement("div");
+                        resultContainer.className = "result-container";
+                        // Add the article ID as a link inside the container
+                        if (article.imageUrl && article.imageUrl.value) {
+                            const image = document.createElement("img");
+                            image.src = article.imageUrl.value;
+                            image.width = 300;
+                            image.height = 200;
+                            image.alt = 'Article Image';
+                            resultContainer.appendChild(image);
+                        }
+
+                        const link = document.createElement("a");
+                        link.href = article.related_article.value;
+                        link.target = "_blank";
+                        link.textContent = 'Article ID: ' + article.related_article.value;
+                        resultContainer.appendChild(link);
+
+                        document.getElementById("result").appendChild(resultContainer);
+                }
+                });
+            } else {
+                console.error('Invalid or missing data structure.');
+            }
+        })  .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("result").innerHTML = 'Error: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
