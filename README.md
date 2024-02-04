@@ -12,5 +12,7 @@ Team: Fine Dining
  - doc.html/doc.css - ScholaryHTML documentation
  - OpenAPISpec.json - OpenAPI document with RESTAPI documentation
 
-
-
+## DONE - S – completed solution (week #17)
+ - project 
+ - demo video
+ - updated documentation
