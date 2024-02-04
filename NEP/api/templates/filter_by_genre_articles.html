@@ -1,5 +1,3 @@
-<!-- filter_by_genre_articles.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Specific Articles</title>
     <style>
-         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #3d7eaa, #66a6ff);
             margin: 0;
+            padding: 0;
+            position: relative; /* Make the body position relative */
         }
+
+        .navbar {
+            position: fixed; /* Position navbar fixed at the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 123, 255, 0.7); /* Transparent background color */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+        }
+
+        .navbar:hover {
+            display: block; /* Show navbar when hovering over navbar */
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-top: 60px; /* Adjusted to provide space below the navbar */
+        }
+
+        h2 {
+            color: white;
+            text-align: center;
+            margin-top: 20px; /* Adjusted to provide space between h1 and h2 */
+        }
+
+        #getDataButton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto 10px; /* Center the button */
+        }
+
+        #getDataButton:hover {
+            background-color: #0056b3;
+        }
+
         .result-container {
             border: 1px solid #ccc;
             padding: 10px;
@@ -24,19 +72,46 @@
             flex: 0 0 calc(33.33% - 20px);
             box-sizing: border-box;
             text-align: center;
+            background: linear-gradient(135deg, #b7d9e6, #ffffff);
+            transition: background 0.3s ease;
+        }
+
+        .result-container:hover {
+            background: linear-gradient(135deg, #9ec1d3, #ffffff);
         }
 
         .result-container img {
             display: block;
             margin: 0 auto;
         }
+
         #result {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #filterGenres {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin: 0 auto; /* Center the dropdown */
         }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <a href="{% url 'home' %}">Actions page</a>
+        <a href="{% url 'mainpage' %}">View all articles</a>
+        <a href="{% url 'searchkeyword' %}">Search article by keyword</a>
+        <a href="{% url 'searchauthorkeyword' %}">Search articles by keyword and author</a>
+    </div>
+
     <h1>Specific Articles</h1>
 
     <h2>Options:</h2>
@@ -47,7 +122,7 @@
     <button id="getDataButton">Get Data</button>
 
     <h2>Result:</h2>
-    <p id="result"></p>
+    <div id="result"></div>
 
     <script type="text/javascript">
         var i,option,optionsSelect;

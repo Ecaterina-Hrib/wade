@@ -1,5 +1,3 @@
-<!-- filter_by_keyword_articles.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Specific Articles</title>
     <style>
-         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #3d7eaa, #66a6ff);
             margin: 0;
+            padding: 0;
+            position: relative; /* Make the body position relative */
         }
+
+        .navbar {
+            position: fixed; /* Position navbar fixed at the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 123, 255, 0.7); /* Transparent background color */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+        }
+
+        .navbar:hover {
+            display: block; /* Show navbar when hovering over navbar */
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-top: 60px; /* Adjusted to provide space below the navbar */
+        }
+
+        h2 {
+            color: white;
+            text-align: center;
+            margin-top: 20px; /* Adjusted to provide space between h1 and h2 */
+        }
+
+        #redirectLink {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin-top: 20px; /* Adjusted to provide space below the h2 */
+            display: block;
+            text-align: center;
+        }
+
+        #filterKeywords {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin: 0 auto; /* Center the dropdown */
+        }
+
+        #getDataButton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 0 auto; /* Center the button */
+        }
+
+        #getDataButton:hover {
+            background-color: #0056b3;
+        }
+
         .result-container {
             border: 1px solid #ccc;
             padding: 10px;
@@ -24,21 +93,38 @@
             flex: 0 0 calc(33.33% - 20px);
             box-sizing: border-box;
             text-align: center;
+            background: linear-gradient(135deg, #b7d9e6, #ffffff);
+            transition: background 0.3s ease;
+        }
+
+        .result-container:hover {
+            background: linear-gradient(135deg, #9ec1d3, #ffffff);
         }
 
         .result-container img {
             display: block;
             margin: 0 auto;
         }
+
         #result {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
-    <a href="#" id="redirectLink">Search by Keyword AND Author</a>
+    <div class="navbar">
+        <a href="{% url 'home' %}">Actions page</a>
+        <a href="{% url 'mainpage' %}">View all articles</a>
+{#        <a href="{% url 'searchkeyword' %}">Search article by keyword</a>#}
+        <a href="{% url 'searchgenre' %}">Search articles by genres</a>
+        <a href="{% url 'searchauthorkeyword' %}">Search articles by keyword and author</a>
+    </div>
+
     <h1>Specific Articles</h1>
+
+    <a href="#" id="redirectLink">Another requested search is by Keyword and Author</a>
 
     <h2>Options:</h2>
     <select id="filterKeywords">
@@ -51,7 +137,7 @@
     <p id="result"></p>
 
     <script type="text/javascript">
-        var i,option,optionsSelect;
+        var i, option, optionsSelect;
         var usedkeywords = {{ keywords|safe }};
         // Reference to the options select element
         optionsSelect = document.getElementById("filterKeywords");
@@ -64,8 +150,9 @@
         }
 
         document.getElementById("redirectLink").addEventListener("click", function(event) {
-                        event.preventDefault();
-                        window.location.href = '../searchauthorkeyword';})
+            event.preventDefault();
+            window.location.href = '../searchauthorkeyword';
+        });
 
         document.getElementById("getDataButton").addEventListener("click", function() {
             var selectedOption = document.getElementById("filterKeywords").value;
@@ -77,47 +164,46 @@
                 },
             })
             .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            console.log(response);
-            return response.json();
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log(response);
+                return response.json();
             })
             .then(data => {
+                console.log('Response:', data);
+                if (data && data.relatedArticles && Array.isArray(data.relatedArticles)) {
+                    const resultElement = document.getElementById("result");
+                    resultElement.innerHTML = '';  // Clear previous results
+                    console.log(data);
+                    data.relatedArticles.forEach(article => {
+                        if (article && article.related_article && article.related_article.value) {
+                            const resultContainer = document.createElement("div");
+                            resultContainer.className = "result-container";
+                            // Add the article ID as a link inside the container
+                            if (article.imageUrl && article.imageUrl.value) {
+                                const image = document.createElement("img");
+                                image.src = article.imageUrl.value;
+                                image.width = 300;
+                                image.height = 200;
+                                image.alt = 'Article Image';
+                                resultContainer.appendChild(image);
+                            }
 
-          console.log('Response:', data);
-            if (data && data.relatedArticles && Array.isArray(data.relatedArticles)) {
-                const resultElement = document.getElementById("result");
-                resultElement.innerHTML = '';  // Clear previous results
+                            const link = document.createElement("a");
+                            link.href = article.related_article.value;
+                            link.target = "_blank";
+                            link.textContent = 'Article ID: ' + article.related_article.value;
+                            resultContainer.appendChild(link);
 
-                data.relatedArticles.forEach(article => {
-                    if (article && article.related_article && article.related_article.value) {
-
-                        const resultContainer = document.createElement("div");
-                        resultContainer.className = "result-container";
-                        // Add the article ID as a link inside the container
-                        if (article.imageUrl && article.imageUrl.value) {
-                            const image = document.createElement("img");
-                            image.src = article.imageUrl.value;
-                            image.width = 300;
-                            image.height = 200;
-                            image.alt = 'Article Image';
-                            resultContainer.appendChild(image);
+                            document.getElementById("result").appendChild(resultContainer);
                         }
-
-                        const link = document.createElement("a");
-                        link.href = article.related_article.value;
-                        link.target = "_blank";
-                        link.textContent = 'Article ID: ' + article.related_article.value;
-                        resultContainer.appendChild(link);
-
-                        document.getElementById("result").appendChild(resultContainer);
+                    });
+                } else {
+                    console.error('Invalid or missing data structure.');
                 }
-                });
-            } else {
-                console.error('Invalid or missing data structure.');
-            }
-        })  .catch(error => {
+            })
+            .catch(error => {
                 console.error('Error:', error);
                 document.getElementById("result").innerHTML = 'Error: ' + error.message;
             });

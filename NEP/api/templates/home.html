@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web news provenance app</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #3d7eaa, #66a6ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            border: 2px solid #007bff; /* Add border style and color */
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #938BA1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Choose an action for article filter:</h1>
+    <form>
+        <button type="button" onclick="window.location.href='{% url 'mainpage' %}'">View all articles</button>
+        <button type="button" onclick="window.location.href='{% url 'searchkeyword' %}'">Search article by keyword</button>
+        <button type="button" onclick="window.location.href='{% url 'searchgenre' %}'">Search articles by genres</button>
+        <button type="button" onclick="window.location.href='{% url 'searchauthorkeyword' %}'">Search articles by Keyword and author</button>
+    </form>
+</body>
+</html>

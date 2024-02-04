@@ -25,6 +25,10 @@ def articles():
     return articles_graph
 
 
+def buttons_page(request):
+    return render(request, 'home.html')
+
+
 class FilterKeywordView(APIView):
     def get(self, request, *args, **kwargs):
         sparqlQuery = SparqlHandler()
@@ -77,7 +81,6 @@ class FilterAuthorKeywordView(APIView):
         for result in resultsKeyword:
             if result['keywords']['value'].split('/')[-1] is not '':
                 keywordList.append(result['keywords']['value'].split('/')[-1])
-
 
         if request.GET.get('selectedOption'):
             keyword = request.GET.get('selectedOption')
@@ -140,3 +143,14 @@ class AllArticlesView(APIView):
         if not results:
             return Response({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
         return render(request, 'mainpage.html', {'articles': results}, status=status.HTTP_200_OK)
+
+
+class MainPage(APIView):
+    @staticmethod
+    def get(request):
+        pass
+        # sparqlQuery = SparqlHandler()
+        # results = sparqlQuery.execute_query(prefixes + sparql_generic_entries['all_articles'])
+        # if not results:
+        #     return Response({'error': 'No articles found'}, status=status.HTTP_404_NOT_FOUND)
+        # return render(request, 'mainpage.html', {'articles': results}, status=status.HTTP_200_OK)
