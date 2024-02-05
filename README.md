@@ -14,5 +14,5 @@ Team: Fine Dining
 
 ## DONE - S – completed solution (week #17)
  - project 
- - demo video
+ - demo video (https://drive.google.com/file/d/1tLp3DQw1X7ur7MUxJ2iuEElKJyPlnVj6/view?usp=sharing)
  - updated documentation
